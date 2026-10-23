@@ -153,8 +153,8 @@ header.top .wm b { font-size: 26px; }
 @media (prefers-reduced-motion: reduce) { .track, .deco svg { animation: none; } }
 
 /* section titles */
-.cats h2, .why h2 { margin: 0 0 14px; font-size: 26px; font-weight: 800; color: var(--plum); }
-.shop h2::after, .cats h2::after, .why h2::after, .contact h2::after {
+.cats h2, .why h2, .pay h2 { margin: 0 0 14px; font-size: 26px; font-weight: 800; color: var(--plum); }
+.shop h2::after, .cats h2::after, .why h2::after, .pay h2::after, .contact h2::after {
   content: ""; display: block; width: 56px; height: 5px; border-radius: 4px; margin-top: 6px;
   background: linear-gradient(90deg, var(--rose), var(--petal));
 }
@@ -195,6 +195,37 @@ header.top .wm b { font-size: 26px; }
 .why-item .ic svg { width: 24px; height: 24px; }
 .why-item b { display: block; color: var(--plum); font-size: 16px; }
 .why-item span { font-size: 14px; }
+
+/* payment */
+.pay { padding-block: 30px 4px; }
+.pay-note { margin: 0 0 14px; color: var(--muted); }
+.pay-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 14px; }
+.bank {
+  position: relative; overflow: hidden; background: #fff; border: 1.5px solid var(--line); border-radius: 22px;
+  padding: 18px; display: flex; flex-direction: column; gap: 12px;
+}
+.bank::before { content: ""; position: absolute; inset-inline-end: -34px; top: -34px; width: 120px; height: 120px; border-radius: 50%; background: var(--blush); }
+.bank > * { position: relative; }
+.bank-head { display: flex; align-items: center; gap: 12px; }
+.bank-ic { flex: none; width: 50px; height: 50px; border-radius: 16px; background: var(--rose-deep); color: #fff; display: grid; place-items: center; }
+.bank-ic svg { width: 26px; height: 26px; }
+.bank-head b { display: block; font-size: 20px; color: var(--plum); line-height: 1.3; }
+.bank-head small { color: var(--muted); font-size: 13px; }
+.acct { background: var(--blush); border-radius: 14px; padding: 12px 14px; display: flex; flex-direction: column; gap: 2px; }
+.acct small { color: var(--muted); font-size: 13px; }
+.acct bdi {
+  display: block; direction: ltr; text-align: right; font-weight: 800; font-size: 21px; letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums; word-break: break-all; color: var(--ink); user-select: all; -webkit-user-select: all;
+}
+.holder { font-size: 15px; }
+.holder b { color: var(--plum); }
+.bank .mini { align-self: flex-start; }
+.steps { margin: 18px 0 0; padding: 0; list-style: none; display: grid; gap: 10px; counter-reset: s; }
+.steps li { display: flex; gap: 12px; align-items: center; font-size: 15px; counter-increment: s; }
+.steps li::before {
+  content: counter(s); flex: none; width: 30px; height: 30px; border-radius: 50%; background: var(--rose-deep); color: #fff;
+  font-weight: 800; font-size: 14px; display: grid; place-items: center;
+}
 
 /* contact + footer */
 .contact { padding-block: 28px 8px; }
@@ -370,6 +401,19 @@ footer.foot .logo { justify-content: center; margin-bottom: 8px; }
     </div>
   </section>
 
+  <section class="pay" id="pay">
+    <div class="wrap">
+      <h2>طرق الدفع</h2>
+      <p class="pay-note">الدفع بالتحويل البنكي، اختاري البنك الأنسب لكِ.</p>
+      <div class="pay-grid" id="payGrid"></div>
+      <ol class="steps">
+        <li>حوّلي مبلغ الطلب إلى أحد الحسابين.</li>
+        <li>أرسلي صورة إيصال التحويل عبر واتساب.</li>
+        <li>نجهّز طلبكِ بعد تأكيد التحويل.</li>
+      </ol>
+    </div>
+  </section>
+
   <section class="contact" id="contact">
     <div class="wrap">
       <h2>تواصلي معنا</h2>
@@ -424,6 +468,10 @@ footer.foot .logo { justify-content: center; margin-bottom: 8px; }
     phones: ['+966 50 826 0151', '+966 59 461 8044'], // أرقام التواصل التي تظهر في الصفحة
     owner: 'نسيبة حيدر عوض',
     address: 'الرياض، حي إشبيلية، شارع الدرعية',
+    payments: [
+      { bank: 'بنك الراجحي', number: '077100010006080718068', holder: 'نسيبه حيدر' },
+      { bank: 'بنكك', number: '9753726', holder: 'نسيبه حيدر' }
+    ],
     showDemoNote: true // أخفي الشريط التجريبي بتغييرها إلى false
   };
   var CURRENCY = 'ر.س';
@@ -606,6 +654,7 @@ footer.foot .logo { justify-content: center; margin-bottom: 8px; }
       var p = byId(+k); lines.push('• ' + p.name + ' × ' + cart[k] + ' = ' + money(p.price * cart[k]));
     });
     lines.push('', 'المجموع: ' + money(t.sum));
+    lines.push('طريقة الدفع: تحويل بنكي، وسأرسل إيصال التحويل هنا.');
     var n = $('custName').value.trim(), c = $('custCity').value.trim();
     if (n) lines.push('الاسم: ' + n);
     if (c) lines.push('المدينة: ' + c);
@@ -646,7 +695,7 @@ footer.foot .logo { justify-content: center; margin-bottom: 8px; }
     }).join('');
   }
   function renderTicker() {
-    var phrases = ['الطلب عبر واتساب', 'تشكيلة نسائية متجددة', 'أناقة تناسب ذوقك', 'نسيبة بيوتي'], g = '', i, r;
+    var phrases = ['الطلب عبر واتساب', 'الدفع بالتحويل البنكي', 'تشكيلة نسائية متجددة', 'أناقة تناسب ذوقك', 'نسيبة بيوتي'], g = '', i, r;
     for (r = 0; r < 3; r++) for (i = 0; i < phrases.length; i++) g += '<span>' + phrases[i] + '</span><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#spark"/></svg>';
     $('track').innerHTML = '<div class="grp">' + g + '</div><div class="grp">' + g + '</div>';
   }
@@ -655,6 +704,27 @@ footer.foot .logo { justify-content: center; margin-bottom: 8px; }
     activeCat = b.getAttribute('data-tile'); query = ''; $('search').value = '';
     renderChips(); renderGrid();
     $('products').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+  });
+
+  /* ====== الدفع ====== */
+  function groupDigits(n) { return n.length > 10 ? n.replace(/(\d{4})(?=\d)/g, '$1 ') : n; }
+  function renderPayments() {
+    var list = STORE.payments || [];
+    if (!list.length) { $('pay').hidden = true; return; }
+    $('payGrid').innerHTML = list.map(function (b, i) {
+      return '<div class="bank"><div class="bank-head"><span class="bank-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10l9-6 9 6"/><path d="M5.5 10v8M9.5 10v8M14.5 10v8M18.5 10v8"/><path d="M3 20.5h18"/></svg></span>' +
+        '<div><b>' + b.bank + '</b><small>تحويل بنكي</small></div></div>' +
+        '<div class="acct"><small>رقم الحساب</small><bdi dir="ltr">' + groupDigits(b.number) + '</bdi></div>' +
+        '<div class="holder">باسم: <b>' + b.holder + '</b></div>' +
+        '<button class="mini" type="button" data-copypay="' + i + '">نسخ رقم الحساب</button></div>';
+    }).join('');
+  }
+  $('payGrid').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-copypay]'); if (!b) return;
+    var num = STORE.payments[+b.getAttribute('data-copypay')].number;
+    try {
+      navigator.clipboard.writeText(num).then(function () { toast('تم نسخ رقم الحساب'); }, function () { toast('اضغطي مطولاً على الرقم لنسخه'); });
+    } catch (err) { toast('اضغطي مطولاً على الرقم لنسخه'); }
   });
 
   /* ====== التواصل ====== */
@@ -718,7 +788,7 @@ footer.foot .logo { justify-content: center; margin-bottom: 8px; }
   $('demoNote').hidden = !STORE.showDemoNote;
   document.documentElement.setAttribute('lang', 'ar');
   document.documentElement.setAttribute('dir', 'rtl');
-  renderTicker(); renderTiles(); renderChips(); renderGrid(); renderAbout(); renderPhones(); renderCart();
+  renderTicker(); renderTiles(); renderPayments(); renderChips(); renderGrid(); renderAbout(); renderPhones(); renderCart();
 })();
 </script>
 

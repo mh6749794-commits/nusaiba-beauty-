@@ -1,0 +1,726 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>نسيبة بيوتي</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Cormorant+Garamond:wght@600&family=Tajawal:wght@400;500;700;800&display=swap">
+<style>
+/* Layout: sticky white header, blush hero with the logo lockup, scrolling category chips, 2-column product grid on phones, cart as a bottom sheet, rose footer with contact. */
+:root {
+  --white: #fffdfd;
+  --blush: #fff0f5;
+  --petal: #f8c8dc;
+  --rose: #e0568a;
+  --rose-deep: #c0306a;
+  --plum: #8f2a55;
+  --ink: #3b2230;
+  --muted: #7d5a6c;
+  --line: #f3d3e0;
+  --font-display: 'Aref Ruqaa', 'Tajawal', serif;
+  --font-latin: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Tajawal', system-ui, sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; direction: rtl; }
+body {
+  background: var(--white);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  padding-bottom: 88px;
+  overflow-x: hidden;
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
+  z-index: 40; background: var(--white);
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+.wrap {
+  max-width: 1080px; margin-inline: auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+button, input { font-family: inherit; }
+button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid var(--rose); outline-offset: 2px; }
+
+/* demo note */
+.note-strip { background: var(--blush); color: var(--plum); font-size: 13px; text-align: center; padding: 6px 0; }
+
+/* header */
+header.top {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 41;
+  background: var(--white); border-bottom: 1px solid var(--line);
+}
+header.top .wrap { display: grid; grid-template-columns: 48px minmax(0, 1fr) 48px; align-items: center; gap: 8px; min-height: 76px; }
+header.top .logo { grid-column: 2; justify-self: center; }
+header.top .cartbtn { grid-column: 3; }
+header.top .wm b { font-size: 26px; }
+.logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; }
+.logo .emb { width: 54px; height: 54px; flex: none; }
+.wm { display: flex; align-items: center; }
+.wm b { font-family: var(--font-display); font-weight: 700; font-size: 30px; line-height: 1.2; color: var(--rose-deep); white-space: nowrap; }
+.cartbtn {
+  position: relative; min-width: 48px; min-height: 48px; border-radius: 16px;
+  border: 1.5px solid var(--line); background: var(--white); color: var(--rose-deep); cursor: pointer;
+  display: grid; place-items: center;
+}
+.cartbtn svg { width: 24px; height: 24px; }
+.badge {
+  position: absolute; top: -6px; inset-inline-end: -6px; min-width: 22px; height: 22px; padding: 0 5px;
+  border-radius: 99px; background: var(--rose-deep); color: #fff; font-size: 12px; font-weight: 800;
+  display: grid; place-items: center; font-variant-numeric: tabular-nums;
+}
+
+/* hero */
+.hero { background: linear-gradient(160deg, #fff6f9 0%, #fde1ec 100%); overflow: hidden; }
+.hero .wrap { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 18px; padding-block: 30px 38px; }
+.hero-text { display: flex; flex-direction: column; align-items: center; min-width: 0; }
+.hero h1 { margin: 0 0 8px; font-size: 26px; line-height: 1.3; font-weight: 800; color: var(--plum); text-wrap: balance; }
+.hero p { margin: 0 0 18px; font-size: 17px; max-width: 34ch; color: var(--ink); }
+.cta {
+  display: inline-flex; align-items: center; justify-content: center; min-height: 50px; padding: 0 30px;
+  border-radius: 16px; background: var(--rose-deep); color: #fff; font-weight: 800; font-size: 17px;
+  text-decoration: none; box-shadow: 0 5px 0 var(--plum);
+}
+.cta:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--plum); }
+.lockup { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.lockup .emb { width: 160px; height: 160px; filter: drop-shadow(0 14px 22px rgba(192, 48, 106, 0.3)); }
+.lockup .wm b { font-size: 66px; line-height: 1.15; }
+
+/* shop */
+.shop { padding-block: 28px 12px; }
+.shop h2, .contact h2 { margin: 0 0 14px; font-size: 26px; font-weight: 800; color: var(--plum); }
+.tools { display: flex; flex-direction: column; gap: 12px; margin-bottom: 18px; }
+.search {
+  width: 100%; min-height: 48px; padding: 0 16px; border-radius: 14px; font-size: 16px;
+  border: 1.5px solid var(--line); background: #fff; color: var(--ink);
+}
+.search::placeholder { color: var(--muted); opacity: 0.8; }
+.chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; scrollbar-width: thin; }
+.chip {
+  flex: none; min-height: 42px; padding: 0 18px; border-radius: 99px; cursor: pointer;
+  border: 1.5px solid var(--line); background: #fff; color: var(--plum); font-weight: 700; font-size: 15px;
+}
+.chip[aria-pressed="true"] { background: var(--rose-deep); border-color: var(--rose-deep); color: #fff; }
+
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+@media (min-width: 640px) { .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; } }
+@media (min-width: 900px) { .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.card { background: #fff; border: 1.5px solid var(--line); border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
+.pic { aspect-ratio: 1 / 1; padding: 12px; display: grid; place-items: center; }
+.pic svg { width: 100%; height: 100%; max-width: 100%; }
+.info { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.cat { font-size: 12px; color: var(--muted); }
+.name { font-size: 15px; font-weight: 700; line-height: 1.4; }
+.price { font-weight: 800; font-size: 17px; color: var(--rose-deep); font-variant-numeric: tabular-nums; margin-top: auto; }
+.add {
+  min-height: 44px; border-radius: 12px; border: 1.5px solid var(--rose); background: #fff; color: var(--rose-deep);
+  font-weight: 800; font-size: 15px; cursor: pointer;
+}
+.add:active { background: var(--rose-deep); color: #fff; }
+.empty { grid-column: 1 / -1; text-align: center; padding: 40px 0; color: var(--muted); }
+
+/* ticker */
+.ticker { background: var(--rose-deep); color: #fff; overflow: hidden; white-space: nowrap; font-weight: 700; font-size: 14px; }
+.track { display: inline-flex; direction: ltr; padding-block: 9px; animation: slide 40s linear infinite; }
+.track .grp { display: inline-flex; align-items: center; gap: 18px; padding-inline-end: 18px; direction: rtl; }
+.track svg { width: 12px; height: 12px; fill: #ffd3e4; flex: none; }
+@keyframes slide { from { transform: translateX(0); } to { transform: translateX(50%); } }
+
+/* hero decoration */
+.hero { position: relative; }
+.hero .wrap { position: relative; z-index: 1; }
+.deco { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.deco svg { position: absolute; fill: var(--rose); opacity: 0.35; animation: floaty 7s ease-in-out infinite; }
+.deco .a { top: 14%; inset-inline-start: 7%; width: 26px; height: 26px; }
+.deco .b { top: 30%; inset-inline-end: 8%; width: 34px; height: 34px; fill: var(--petal); opacity: 0.95; animation-delay: -2s; }
+.deco .c { bottom: 18%; inset-inline-start: 12%; width: 20px; height: 20px; animation-delay: -4s; }
+.deco .d { top: 9%; inset-inline-end: 24%; width: 18px; height: 18px; animation-delay: -1s; }
+.deco .e { bottom: 12%; inset-inline-end: 10%; width: 28px; height: 28px; opacity: 0.3; animation-delay: -3s; }
+.deco .f { top: 46%; inset-inline-start: 3%; width: 16px; height: 16px; fill: var(--petal); opacity: 0.95; animation-delay: -5s; }
+@keyframes floaty { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-12px) rotate(8deg); } }
+.lockup { position: relative; isolation: isolate; }
+.lockup::before {
+  content: ""; position: absolute; z-index: -1; top: -34px; left: 50%; transform: translateX(-50%);
+  width: 280px; height: 280px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0) 70%);
+}
+@media (prefers-reduced-motion: reduce) { .track, .deco svg { animation: none; } }
+
+/* section titles */
+.cats h2, .why h2 { margin: 0 0 14px; font-size: 26px; font-weight: 800; color: var(--plum); }
+.shop h2::after, .cats h2::after, .why h2::after, .contact h2::after {
+  content: ""; display: block; width: 56px; height: 5px; border-radius: 4px; margin-top: 6px;
+  background: linear-gradient(90deg, var(--rose), var(--petal));
+}
+
+/* category circles */
+.cats { padding-block: 28px 4px; }
+.tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px 10px; }
+@media (min-width: 720px) { .tiles { grid-template-columns: repeat(8, minmax(0, 1fr)); } }
+.tile { background: none; border: 0; padding: 0; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; color: var(--plum); font-weight: 700; font-size: 14px; }
+.tile .ring {
+  width: 100%; aspect-ratio: 1 / 1; border-radius: 50%; display: grid; place-items: center; padding: 12%;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--petal); transition: transform 0.2s;
+}
+.tile .ring svg { width: 100%; height: 100%; }
+.tile:hover .ring { transform: translateY(-3px); }
+.tile:active .ring { transform: scale(0.94); }
+
+/* product extras */
+.pic { position: relative; }
+.tag {
+  position: absolute; top: 10px; inset-inline-start: 10px; z-index: 1; background: var(--rose-deep); color: #fff;
+  font-size: 12px; font-weight: 800; padding: 2px 10px; border-radius: 99px;
+}
+.fav {
+  position: absolute; top: 6px; inset-inline-end: 6px; z-index: 1; width: 42px; height: 42px; border: 0; border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92); display: grid; place-items: center; cursor: pointer;
+}
+.fav svg { width: 22px; height: 22px; fill: none; stroke: var(--rose-deep); stroke-width: 2; stroke-linejoin: round; }
+.fav[aria-pressed="true"] svg { fill: var(--rose-deep); }
+.card { transition: transform 0.2s, box-shadow 0.2s; }
+.card:hover { transform: translateY(-3px); box-shadow: 0 14px 28px -16px rgba(192, 48, 106, 0.5); }
+
+/* why us */
+.why { padding-block: 30px 4px; }
+.why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 12px; }
+.why-item { background: var(--blush); border-radius: 20px; padding: 16px; display: flex; gap: 14px; align-items: flex-start; }
+.why-item .ic { flex: none; width: 48px; height: 48px; border-radius: 50%; background: #fff; display: grid; place-items: center; color: var(--rose-deep); }
+.why-item .ic svg { width: 24px; height: 24px; }
+.why-item b { display: block; color: var(--plum); font-size: 16px; }
+.why-item span { font-size: 14px; }
+
+/* contact + footer */
+.contact { padding-block: 28px 8px; }
+.contact-card { background: var(--blush); border-radius: 22px; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+.contact-card p { margin: 0; color: var(--ink); }
+.about { display: flex; flex-direction: column; gap: 6px; }
+.about div { display: flex; flex-wrap: wrap; gap: 4px 8px; }
+.about dt, .about span.k { color: var(--muted); font-size: 14px; }
+.about b { font-weight: 800; color: var(--plum); }
+.phones { display: flex; flex-direction: column; gap: 10px; }
+.phone { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; background: #fff; border-radius: 14px; padding: 10px 14px; }
+.phone bdi { font-weight: 800; font-size: 19px; direction: ltr; user-select: all; -webkit-user-select: all; font-variant-numeric: tabular-nums; }
+.phone .grow { flex: 1; }
+.mini {
+  min-height: 40px; padding: 0 16px; border-radius: 12px; border: 1.5px solid var(--rose); background: #fff;
+  color: var(--rose-deep); font-weight: 700; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center;
+}
+footer.foot { margin-top: 28px; background: #b83a6c; color: #fff; padding-block: 22px; text-align: center; font-size: 14px; }
+footer.foot .wm b { color: #fff; }
+footer.foot .logo { justify-content: center; margin-bottom: 8px; }
+
+/* bottom bar */
+.bar {
+  position: fixed; inset-inline: 0; bottom: 0; z-index: 45;
+  padding-top: 10px; padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  background: linear-gradient(rgba(255, 253, 253, 0), var(--white) 40%);
+}
+.bar button {
+  display: flex; width: 100%; max-width: 520px; margin-inline: auto; min-height: 54px; align-items: center; justify-content: space-between;
+  padding: 0 20px; border: 0; border-radius: 18px; background: var(--rose-deep); color: #fff; font-weight: 800; font-size: 17px;
+  cursor: pointer; box-shadow: 0 8px 22px -8px rgba(192, 48, 106, 0.7);
+}
+.bar span { font-variant-numeric: tabular-nums; }
+
+/* cart sheet */
+.sheet-wrap { position: fixed; inset: 0; z-index: 60; }
+.scrim { position: absolute; inset: 0; background: rgba(59, 34, 48, 0.5); }
+.sheet {
+  position: absolute; bottom: 0; inset-inline: 0; margin-inline: auto; max-width: 560px; max-height: 90%; overflow-y: auto;
+  background: #fff; border-radius: 26px 26px 0 0;
+  padding: 18px max(16px, env(safe-area-inset-left, 0px)) calc(18px + env(safe-area-inset-bottom, 0px));
+}
+.sheet-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.sheet-head h2 { margin: 0; font-size: 22px; color: var(--plum); }
+.x { width: 44px; height: 44px; border-radius: 50%; border: 0; background: var(--blush); color: var(--plum); font-size: 26px; line-height: 1; cursor: pointer; }
+.line { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.line .th { width: 58px; height: 58px; border-radius: 14px; flex: none; padding: 4px; }
+.line .th svg { width: 100%; height: 100%; }
+.line .meta { flex: 1; min-width: 0; }
+.line .meta b { display: block; font-size: 15px; line-height: 1.35; }
+.line .meta span { color: var(--rose-deep); font-weight: 700; font-size: 14px; font-variant-numeric: tabular-nums; }
+.qty { display: flex; align-items: center; gap: 4px; }
+.qty button { width: 38px; height: 38px; border-radius: 12px; border: 1.5px solid var(--line); background: #fff; font-size: 20px; color: var(--plum); cursor: pointer; }
+.qty output { min-width: 26px; text-align: center; font-weight: 800; font-variant-numeric: tabular-nums; }
+.total { display: flex; justify-content: space-between; align-items: baseline; padding: 14px 0 6px; font-size: 18px; font-weight: 700; }
+.total b { font-size: 24px; color: var(--rose-deep); font-variant-numeric: tabular-nums; }
+.fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 8px 0 14px; }
+@media (max-width: 420px) { .fields { grid-template-columns: 1fr; } }
+.fields label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 4px; }
+.fields input { width: 100%; min-height: 46px; padding: 0 12px; border-radius: 12px; border: 1.5px solid var(--line); font-size: 16px; color: var(--ink); background: #fff; }
+.order {
+  display: flex; align-items: center; justify-content: center; min-height: 54px; border-radius: 16px; text-decoration: none;
+  background: var(--rose-deep); color: #fff; font-weight: 800; font-size: 17px;
+}
+.order[aria-disabled="true"] { background: #e6c6d4; color: #fff; cursor: not-allowed; }
+.hint { margin: 10px 0 0; font-size: 13px; color: var(--muted); text-align: center; }
+.cart-empty { text-align: center; color: var(--muted); padding: 26px 0; }
+
+.toast {
+  position: fixed; left: 50%; bottom: calc(92px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 70;
+  background: var(--plum); color: #fff; padding: 10px 20px; border-radius: 99px; font-weight: 700; font-size: 15px;
+  max-width: calc(100% - 32px);
+}
+</style>
+
+<style>body{margin:0}</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="emblem" viewBox="0 0 100 100">
+    <circle cx="50" cy="50" r="47" fill="#fff" stroke="var(--rose)" stroke-width="2.5"/>
+    <circle cx="50" cy="50" r="41" fill="var(--blush)"/>
+    <path d="M46 48 C36 28 12 30 12 48 C12 66 36 68 46 52 Z" fill="var(--rose)"/>
+    <path d="M54 48 C64 28 88 30 88 48 C88 66 64 68 54 52 Z" fill="var(--rose)"/>
+    <path d="M44 48 C36 38 24 39 24 48 C24 57 36 58 44 51 Z" fill="var(--petal)"/>
+    <path d="M56 48 C64 38 76 39 76 48 C76 57 64 58 56 51 Z" fill="var(--petal)"/>
+    <path d="M45 58 L31 82 L40 80 L46 88 L52 60 Z" fill="var(--rose-deep)"/>
+    <path d="M55 58 L69 82 L60 80 L54 88 L48 60 Z" fill="var(--rose-deep)"/>
+    <rect x="42" y="38" width="16" height="20" rx="7" fill="var(--rose-deep)"/>
+    <path d="M80 14 L82 20 L88 22 L82 24 L80 30 L78 24 L72 22 L78 20 Z" fill="var(--rose)"/>
+    <path d="M20 16 L21.5 20.5 L26 22 L21.5 23.5 L20 28 L18.5 23.5 L14 22 L18.5 20.5 Z" fill="var(--rose)"/>
+  </symbol>
+  <symbol id="heart" viewBox="0 0 24 24"><path d="M12 21C5 15 2 11.5 2 8a5 5 0 0 1 10-1.5A5 5 0 0 1 22 8c0 3.5-3 7-10 13z"/></symbol>
+  <symbol id="spark" viewBox="0 0 24 24"><path d="M12 1l2.5 8.5L23 12l-8.5 2.5L12 23l-2.5-8.5L1 12l8.5-2.5z"/></symbol>
+</svg>
+
+<div id="top"></div>
+<div class="note-strip" id="demoNote" hidden><div class="wrap">نسخة تجريبية: أسماء المنتجات والأسعار مؤقتة وسيتم استبدالها بمنتجات المتجر.</div></div>
+
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="نسيبة بيوتي">
+      <svg class="emb" viewBox="0 0 100 100" aria-hidden="true"><use href="#emblem"/></svg>
+      <span class="wm"><b>نسيبة بيوتي</b></span>
+    </a>
+    <button class="cartbtn" id="openCart" type="button" aria-label="السلة">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 11.2a1.5 1.5 0 0 1-1.5 1.3H7.7a1.5 1.5 0 0 1-1.5-1.3L5 8z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg>
+      <span class="badge" id="cartCount" hidden>0</span>
+    </button>
+  </div>
+</header>
+<div class="ticker" aria-hidden="true"><div class="track" id="track"></div></div>
+
+<section class="hero">
+  <div class="deco" aria-hidden="true">
+    <svg class="a" viewBox="0 0 24 24"><use href="#heart"/></svg>
+    <svg class="b" viewBox="0 0 24 24"><use href="#spark"/></svg>
+    <svg class="c" viewBox="0 0 24 24"><use href="#spark"/></svg>
+    <svg class="d" viewBox="0 0 24 24"><use href="#heart"/></svg>
+    <svg class="e" viewBox="0 0 24 24"><use href="#heart"/></svg>
+    <svg class="f" viewBox="0 0 24 24"><use href="#spark"/></svg>
+  </div>
+  <div class="wrap">
+    <div class="lockup" role="img" aria-label="نسيبة بيوتي">
+      <svg class="emb" viewBox="0 0 100 100" aria-hidden="true"><use href="#emblem"/></svg>
+      <span class="wm"><b>نسيبة بيوتي</b></span>
+    </div>
+    <div class="hero-text">
+      <h1>أناقتكِ تبدأ من هنا</h1>
+      <p>ملابس وشنط وحقائب ومكياج بلمسة ناعمة، واطلبي ما يعجبكِ بسهولة عبر واتساب.</p>
+      <a class="cta" href="#products">تسوّقي الآن</a>
+    </div>
+  </div>
+</section>
+
+<main>
+  <section class="cats">
+    <div class="wrap">
+      <h2>أقسام المتجر</h2>
+      <div class="tiles" id="tiles"></div>
+    </div>
+  </section>
+
+  <section class="shop" id="products">
+    <div class="wrap">
+      <h2>تسوّقي حسب القسم</h2>
+      <div class="tools">
+        <input class="search" id="search" type="search" placeholder="ابحثي عن منتج" aria-label="ابحثي عن منتج" autocomplete="off">
+        <div class="chips" id="chips" role="group" aria-label="الأقسام"></div>
+      </div>
+      <div class="grid" id="grid"></div>
+    </div>
+  </section>
+
+  <section class="why">
+    <div class="wrap">
+      <h2>لماذا نسيبة بيوتي</h2>
+      <div class="why-grid">
+        <div class="why-item">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M4 5h16v11H9l-5 4z"/></svg></span>
+          <div><b>اطلبي عبر واتساب</b><span>اختاري منتجاتكِ وأرسلي الطلب بضغطة واحدة.</span></div>
+        </div>
+        <div class="why-item">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><use href="#spark"/></svg></span>
+          <div><b>تشكيلة متجددة</b><span>ملابس وشنط ومكياج بذوق نسائي ناعم.</span></div>
+        </div>
+        <div class="why-item">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><use href="#heart"/></svg></span>
+          <div><b>مفضلتكِ بين يديكِ</b><span>احفظي ما يعجبكِ بالقلب وارجعي إليه لاحقاً.</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="wrap">
+      <h2>تواصلي معنا</h2>
+      <div class="contact-card">
+        <p>للاستفسار أو الطلب، راسلينا على واتساب.</p>
+        <div class="about" id="about"></div>
+        <div class="phones" id="phones"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="نسيبة بيوتي">
+      <svg class="emb" viewBox="0 0 100 100" aria-hidden="true"><use href="#emblem"/></svg>
+      <span class="wm"><b>نسيبة بيوتي</b></span>
+    </a>
+    <div>جميع الحقوق محفوظة لمتجر نسيبة بيوتي</div>
+  </div>
+</footer>
+
+<div class="bar" id="bar" hidden>
+  <button type="button" id="barBtn"><span id="barLabel">عرض السلة</span><span id="barTotal"></span></button>
+</div>
+
+<div class="sheet-wrap" id="sheetWrap" hidden>
+  <div class="scrim" id="scrim"></div>
+  <section class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <div class="sheet-head">
+      <h2 id="sheetTitle">سلة المشتريات</h2>
+      <button class="x" id="closeCart" type="button" aria-label="إغلاق">×</button>
+    </div>
+    <div id="cartList"></div>
+    <div class="total"><span>المجموع</span><b id="cartTotal">0</b></div>
+    <div class="fields">
+      <div><label for="custName">الاسم</label><input id="custName" type="text" autocomplete="name"></div>
+      <div><label for="custCity">المدينة</label><input id="custCity" type="text" autocomplete="address-level2"></div>
+    </div>
+    <a class="order" id="orderLink" target="_blank" rel="noopener">أرسلي الطلب عبر واتساب</a>
+    <p class="hint" id="orderHint"></p>
+  </section>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(function () {
+  /* ====== بيانات المتجر: عدّلي هنا ====== */
+  var STORE = {
+    whatsapp: '966508260151', // رقم واتساب بصيغة دولية بدون +
+    phones: ['+966 50 826 0151', '+966 59 461 8044'], // أرقام التواصل التي تظهر في الصفحة
+    owner: 'نسيبة حيدر عوض',
+    address: 'الرياض، حي إشبيلية، شارع الدرعية',
+    showDemoNote: true // أخفي الشريط التجريبي بتغييرها إلى false
+  };
+  var CURRENCY = 'ر.س';
+
+  var CATS = ['الكل', 'المفضلة', 'ملابس', 'تيشيرتات', 'بناطلين', 'تنانير', 'بيجامات', 'شنط', 'حقائب', 'مكياج'];
+  var PAL = {
+    rose:  ['#e8749f', '#c9457a', '#fff0f5'],
+    blush: ['#f8c8dc', '#e59ab9', '#fff6f9'],
+    white: ['#ffffff', '#f1c9d9', '#fde9f1'],
+    deep:  ['#c9457a', '#9b2a5c', '#ffeef4'],
+    nude:  ['#f2d0c4', '#dca796', '#fff4f0'],
+    mauve: ['#d98cad', '#b4638a', '#fdeff5']
+  };
+
+  var PRODUCTS = [
+    { id: 1, name: 'فستان سهرة وردي', cat: 'ملابس', price: 249, kind: 'dress', color: 'rose' },
+    { id: 2, name: 'فستان صيفي ناعم', cat: 'ملابس', price: 189, kind: 'dress', color: 'blush' },
+    { id: 3, name: 'فستان أبيض كلاسيكي', cat: 'ملابس', price: 219, kind: 'dress', color: 'white' },
+    { id: 4, name: 'تيشيرت قطن أبيض', cat: 'تيشيرتات', price: 59, kind: 'tee', color: 'white' },
+    { id: 5, name: 'تيشيرت وردي بطبعة قلب', cat: 'تيشيرتات', price: 65, kind: 'tee', color: 'rose', heart: true },
+    { id: 6, name: 'تيشيرت واسع كاجوال', cat: 'تيشيرتات', price: 69, kind: 'tee', color: 'nude' },
+    { id: 7, name: 'بنطلون واسع وردي ناعم', cat: 'بناطلين', price: 139, kind: 'pants', color: 'blush' },
+    { id: 8, name: 'بنطلون قماش أنيق', cat: 'بناطلين', price: 119, kind: 'pants', color: 'white' },
+    { id: 9, name: 'بنطلون مريح للبيت', cat: 'بناطلين', price: 89, kind: 'pants', color: 'rose' },
+    { id: 10, name: 'تنورة بليسيه وردية', cat: 'تنانير', price: 99, kind: 'skirt', color: 'rose' },
+    { id: 11, name: 'تنورة ميدي أنيقة', cat: 'تنانير', price: 109, kind: 'skirt', color: 'white' },
+    { id: 12, name: 'تنورة قصيرة كاجوال', cat: 'تنانير', price: 89, kind: 'skirt', color: 'mauve' },
+    { id: 13, name: 'بيجامة ساتان وردية', cat: 'بيجامات', price: 149, kind: 'pj', color: 'blush' },
+    { id: 14, name: 'بيجامة قطن بقلوب', cat: 'بيجامات', price: 119, kind: 'pj', color: 'white', heart: true },
+    { id: 15, name: 'بيجامة صيفية ناعمة', cat: 'بيجامات', price: 99, kind: 'pj', color: 'nude' },
+    { id: 16, name: 'شنطة يد وردية', cat: 'شنط', price: 159, kind: 'handbag', color: 'rose' },
+    { id: 17, name: 'شنطة كتف بيضاء', cat: 'شنط', price: 139, kind: 'handbag', color: 'white' },
+    { id: 18, name: 'شنطة سهرة صغيرة', cat: 'شنط', price: 119, kind: 'clutch', color: 'deep' },
+    { id: 19, name: 'حقيبة ظهر عصرية', cat: 'حقائب', price: 129, kind: 'backpack', color: 'rose' },
+    { id: 20, name: 'حقيبة سفر وردية', cat: 'حقائب', price: 289, kind: 'suitcase', color: 'blush' },
+    { id: 21, name: 'حقيبة جامعة', cat: 'حقائب', price: 149, kind: 'backpack', color: 'white' },
+    { id: 22, name: 'أحمر شفاه وردي ناعم', cat: 'مكياج', price: 49, kind: 'lipstick', color: 'rose' },
+    { id: 23, name: 'باليت ظلال ورديات', cat: 'مكياج', price: 119, kind: 'palette', color: 'blush' },
+    { id: 24, name: 'أحمر خدود بودرة', cat: 'مكياج', price: 59, kind: 'compact', color: 'rose' }
+  ];
+
+  var TAGS = { 1: 'الأكثر طلباً', 5: 'جديد', 10: 'جديد', 13: 'الأكثر طلباً', 16: 'الأكثر طلباً', 19: 'جديد', 22: 'جديد', 23: 'الأكثر طلباً' };
+
+  /* ====== رسومات المنتجات ====== */
+  function tee(c, s, p) {
+    return '<path d="M70 35 L90 28 Q100 44 110 28 L130 35 L158 62 L140 82 L128 72 L128 160 L72 160 L72 72 L60 82 L42 62 Z" fill="' + c + '"/>' +
+      '<path d="M90 28 Q100 44 110 28 Q100 36 90 28Z" fill="' + s + '"/>' +
+      (p && p.heart ? '<path d="M100 128 C78 110 82 92 95 96 C100 98 100 103 100 103 C100 103 100 98 105 96 C118 92 122 110 100 128Z" fill="' + s + '" stroke="none"/>' : '');
+  }
+  function pantsShape(c, s) {
+    return '<path d="M66 30 H134 L142 172 H108 L100 90 L92 172 H58 Z" fill="' + c + '"/>' +
+      '<rect x="66" y="30" width="68" height="14" fill="' + s + '"/>' +
+      '<path d="M100 44 V90" stroke="' + s + '" stroke-width="3" fill="none"/>';
+  }
+  var ART = {
+    dress: function (c, s) {
+      return '<path d="M82 26 L100 40 L118 26 L126 66 L116 78 L152 168 Q100 184 48 168 L84 78 L74 66 Z" fill="' + c + '"/>' +
+        '<path d="M84 78 L116 78 L120 90 L80 90 Z" fill="' + s + '"/>' +
+        '<path d="M82 26 Q100 54 118 26" fill="none" stroke="' + s + '" stroke-width="3"/>' +
+        '<path d="M64 152 Q100 164 136 152" fill="none" stroke="' + s + '" stroke-width="2.5" opacity="0.6"/>';
+    },
+    tee: tee,
+    pants: pantsShape,
+    skirt: function (c, s) {
+      var lines = '';
+      [-30, -15, 0, 15, 30].forEach(function (d) {
+        lines += '<path d="M' + (100 + d * 0.5) + ' 52 L' + (100 + d * 2) + ' 172" stroke="' + s + '" stroke-width="2.5" fill="none" opacity="0.6"/>';
+      });
+      return '<path d="M72 46 H128 L160 168 Q100 182 40 168 Z" fill="' + c + '"/>' + lines +
+        '<rect x="70" y="38" width="60" height="14" rx="5" fill="' + s + '"/>';
+    },
+    pj: function (c, s, p) {
+      return '<g transform="translate(30 4) scale(0.6)">' + tee(c, s, p) + '</g>' +
+        '<g transform="translate(40 98) scale(0.5)">' + pantsShape(c, s) + '</g>';
+    },
+    handbag: function (c, s) {
+      return '<path d="M72 92 Q72 40 100 40 Q128 40 128 92" fill="none" stroke="' + s + '" stroke-width="7" stroke-linecap="round"/>' +
+        '<path d="M50 90 H150 L160 166 Q100 176 40 166 Z" fill="' + c + '"/>' +
+        '<path d="M50 90 H150 L155 118 Q100 136 45 118 Z" fill="' + s + '"/>' +
+        '<circle cx="100" cy="124" r="7" fill="#fff"/>';
+    },
+    clutch: function (c, s) {
+      return '<path d="M60 86 Q100 14 140 86" fill="none" stroke="' + s + '" stroke-width="3.5" stroke-dasharray="2 6" stroke-linecap="round"/>' +
+        '<rect x="44" y="84" width="112" height="72" rx="16" fill="' + c + '"/>' +
+        '<path d="M44 100 Q100 132 156 100 L156 98 Q156 84 140 84 H60 Q44 84 44 98 Z" fill="' + s + '"/>' +
+        '<circle cx="100" cy="122" r="6" fill="#fff"/>';
+    },
+    backpack: function (c, s) {
+      return '<path d="M82 48 Q82 22 100 22 Q118 22 118 48" fill="none" stroke="' + s + '" stroke-width="6" stroke-linecap="round"/>' +
+        '<rect x="54" y="42" width="92" height="130" rx="34" fill="' + c + '"/>' +
+        '<rect x="68" y="112" width="64" height="46" rx="14" fill="' + s + '"/>' +
+        '<path d="M70 92 H130" stroke="' + s + '" stroke-width="3.5" fill="none" stroke-linecap="round"/>' +
+        '<circle cx="100" cy="135" r="5" fill="#fff"/>';
+    },
+    suitcase: function (c, s) {
+      return '<path d="M84 40 V28 Q84 22 90 22 H110 Q116 22 116 28 V40" fill="none" stroke="' + s + '" stroke-width="6" stroke-linecap="round"/>' +
+        '<rect x="48" y="40" width="104" height="124" rx="16" fill="' + c + '"/>' +
+        '<path d="M76 56 V148 M100 56 V148 M124 56 V148" stroke="' + s + '" stroke-width="4" fill="none" opacity="0.65" stroke-linecap="round"/>' +
+        '<circle cx="68" cy="174" r="7" fill="' + s + '"/><circle cx="132" cy="174" r="7" fill="' + s + '"/>';
+    },
+    lipstick: function (c, s) {
+      return '<path d="M87 98 V64 Q100 40 113 64 V98 Z" fill="' + c + '"/>' +
+        '<rect x="82" y="96" width="36" height="16" rx="3" fill="#fff"/>' +
+        '<rect x="84" y="110" width="32" height="58" rx="5" fill="' + s + '"/>' +
+        '<path d="M92 120 V158" stroke="#fff" stroke-width="3" opacity="0.45" fill="none" stroke-linecap="round"/>';
+    },
+    palette: function (c, s) {
+      var cols = ['#f8c8dc', '#e8749f', '#f2d0c4', '#c9457a', '#fbe3ec', '#d98cad'], out = '', i;
+      for (i = 0; i < 6; i++) out += '<circle cx="' + (66 + (i % 3) * 34) + '" cy="' + (84 + Math.floor(i / 3) * 36) + '" r="14" fill="' + cols[i] + '"/>';
+      return '<rect x="34" y="50" width="132" height="100" rx="18" fill="' + c + '"/>' +
+        '<rect x="44" y="60" width="112" height="80" rx="12" fill="#fff" opacity="0.92"/>' + out;
+    },
+    compact: function (c, s) {
+      return '<circle cx="100" cy="100" r="58" fill="' + c + '"/>' +
+        '<circle cx="100" cy="100" r="44" fill="#fff" opacity="0.9"/>' +
+        '<circle cx="100" cy="100" r="35" fill="' + s + '"/>' +
+        '<path d="M80 94 Q90 80 106 84" stroke="#fff" stroke-width="5" fill="none" opacity="0.6" stroke-linecap="round"/>';
+    }
+  };
+  function art(p) {
+    var pal = PAL[p.color];
+    return '<svg viewBox="0 0 200 200" aria-hidden="true" stroke="rgba(143,42,85,0.3)" stroke-width="1.6" stroke-linejoin="round">' + ART[p.kind](pal[0], pal[1], p) + '</svg>';
+  }
+
+  /* ====== الحالة ====== */
+  var $ = function (id) { return document.getElementById(id); };
+  var cart = {}, favs = {}, activeCat = 'الكل', query = '', toastTimer = null;
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  try { cart = JSON.parse(localStorage.getItem('nusaibaCart') || '{}') || {}; } catch (e) { cart = {}; }
+  try { favs = JSON.parse(localStorage.getItem('nusaibaFavs') || '{}') || {}; } catch (e) { favs = {}; }
+  function saveFavs() { try { localStorage.setItem('nusaibaFavs', JSON.stringify(favs)); } catch (e) {} }
+  function saveCart() { try { localStorage.setItem('nusaibaCart', JSON.stringify(cart)); } catch (e) {} }
+  function byId(id) { for (var i = 0; i < PRODUCTS.length; i++) if (PRODUCTS[i].id === id) return PRODUCTS[i]; return null; }
+  function money(n) { return n + ' ' + CURRENCY; }
+  function totals() {
+    var count = 0, sum = 0;
+    Object.keys(cart).forEach(function (k) {
+      var p = byId(+k); if (!p) { delete cart[k]; return; }
+      count += cart[k]; sum += cart[k] * p.price;
+    });
+    return { count: count, sum: sum };
+  }
+
+  /* ====== عرض المنتجات ====== */
+  function renderChips() {
+    $('chips').innerHTML = CATS.map(function (c) {
+      return '<button class="chip" type="button" data-cat="' + c + '" aria-pressed="' + (c === activeCat) + '">' + (c === 'المفضلة' ? '♥ المفضلة' : c) + '</button>';
+    }).join('');
+  }
+  function renderGrid() {
+    var q = query.trim();
+    var list = PRODUCTS.filter(function (p) {
+      var inCat = activeCat === 'الكل' || (activeCat === 'المفضلة' ? !!favs[p.id] : p.cat === activeCat);
+      return inCat && (!q || p.name.indexOf(q) !== -1 || p.cat.indexOf(q) !== -1);
+    });
+    $('grid').innerHTML = list.length ? list.map(function (p) {
+      return '<article class="card"><div class="pic" style="background:' + PAL[p.color][2] + '">' +
+        (TAGS[p.id] ? '<span class="tag">' + TAGS[p.id] + '</span>' : '') +
+        '<button class="fav" type="button" data-fav="' + p.id + '" aria-pressed="' + (!!favs[p.id]) + '" aria-label="المفضلة"><svg viewBox="0 0 24 24"><use href="#heart"/></svg></button>' +
+        art(p) + '</div>' +
+        '<div class="info"><span class="cat">' + p.cat + '</span><div class="name">' + p.name + '</div>' +
+        '<div class="price">' + money(p.price) + '</div>' +
+        '<button class="add" type="button" data-add="' + p.id + '">أضيفي للسلة</button></div></article>';
+    }).join('') : '<p class="empty">' + (activeCat === 'المفضلة' && !q ? 'لم تضيفي منتجات للمفضلة بعد، اضغطي على القلب فوق أي منتج.' : 'لا توجد منتجات مطابقة، جرّبي كلمة أخرى.') + '</p>';
+  }
+
+  /* ====== السلة ====== */
+  function buildOrderLink() {
+    var t = totals(), link = $('orderLink'), hint = $('orderHint');
+    if (!t.count) {
+      link.removeAttribute('href'); link.setAttribute('aria-disabled', 'true');
+      hint.textContent = 'أضيفي منتجات إلى السلة أولاً.'; return;
+    }
+    if (!STORE.whatsapp) {
+      link.removeAttribute('href'); link.setAttribute('aria-disabled', 'true');
+      hint.textContent = 'سيعمل زر الطلب عبر واتساب بعد إضافة رقم المتجر.'; return;
+    }
+    var lines = ['السلام عليكم، أرغب بطلب من متجر نسيبة بيوتي:', ''];
+    Object.keys(cart).forEach(function (k) {
+      var p = byId(+k); lines.push('• ' + p.name + ' × ' + cart[k] + ' = ' + money(p.price * cart[k]));
+    });
+    lines.push('', 'المجموع: ' + money(t.sum));
+    var n = $('custName').value.trim(), c = $('custCity').value.trim();
+    if (n) lines.push('الاسم: ' + n);
+    if (c) lines.push('المدينة: ' + c);
+    link.setAttribute('href', 'https://wa.me/' + STORE.whatsapp.replace(/\D/g, '') + '?text=' + encodeURIComponent(lines.join('\n')));
+    link.removeAttribute('aria-disabled');
+    hint.textContent = 'سيفتح واتساب برسالة الطلب جاهزة للإرسال.';
+  }
+  function renderCart() {
+    var t = totals(), keys = Object.keys(cart);
+    saveCart();
+    $('cartCount').hidden = !t.count; $('cartCount').textContent = t.count;
+    $('bar').hidden = !t.count || !$('sheetWrap').hidden;
+    $('barLabel').textContent = 'عرض السلة (' + t.count + ')';
+    $('barTotal').textContent = money(t.sum);
+    $('cartTotal').textContent = money(t.sum);
+    $('cartList').innerHTML = keys.length ? keys.map(function (k) {
+      var p = byId(+k);
+      return '<div class="line"><div class="th" style="background:' + PAL[p.color][2] + '">' + art(p) + '</div>' +
+        '<div class="meta"><b>' + p.name + '</b><span>' + money(p.price) + '</span></div>' +
+        '<div class="qty"><button type="button" data-dec="' + p.id + '" aria-label="إنقاص">−</button><output>' + cart[k] + '</output>' +
+        '<button type="button" data-inc="' + p.id + '" aria-label="زيادة">+</button></div></div>';
+    }).join('') : '<p class="cart-empty">السلة فارغة حالياً.</p>';
+    buildOrderLink();
+  }
+  function toast(msg) {
+    var el = $('toast'); el.textContent = msg; el.hidden = false;
+    clearTimeout(toastTimer); toastTimer = setTimeout(function () { el.hidden = true; }, 1600);
+  }
+  function openCart() { $('sheetWrap').hidden = false; renderCart(); }
+  function closeCart() { $('sheetWrap').hidden = true; renderCart(); }
+
+  /* ====== الأقسام والشريط ====== */
+  function renderTiles() {
+    var cats = ['ملابس', 'تيشيرتات', 'بناطلين', 'تنانير', 'بيجامات', 'شنط', 'حقائب', 'مكياج'];
+    $('tiles').innerHTML = cats.map(function (c) {
+      var p = PRODUCTS.filter(function (x) { return x.cat === c; })[0];
+      return '<button class="tile" type="button" data-tile="' + c + '"><span class="ring" style="background:' + PAL[p.color][2] + '">' + art(p) + '</span><span>' + c + '</span></button>';
+    }).join('');
+  }
+  function renderTicker() {
+    var phrases = ['الطلب عبر واتساب', 'تشكيلة نسائية متجددة', 'أناقة تناسب ذوقك', 'نسيبة بيوتي'], g = '', i, r;
+    for (r = 0; r < 3; r++) for (i = 0; i < phrases.length; i++) g += '<span>' + phrases[i] + '</span><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#spark"/></svg>';
+    $('track').innerHTML = '<div class="grp">' + g + '</div><div class="grp">' + g + '</div>';
+  }
+  $('tiles').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-tile]'); if (!b) return;
+    activeCat = b.getAttribute('data-tile'); query = ''; $('search').value = '';
+    renderChips(); renderGrid();
+    $('products').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+  });
+
+  /* ====== التواصل ====== */
+  function renderAbout() {
+    var rows = '';
+    if (STORE.owner) rows += '<div><span class="k">الإدارة:</span><b>' + STORE.owner + '</b></div>';
+    if (STORE.address) rows += '<div><span class="k">الموقع:</span><b>' + STORE.address + '</b></div>';
+    $('about').innerHTML = rows;
+  }
+  function renderPhones() {
+    var box = $('phones');
+    if (!STORE.phones.length) {
+      box.innerHTML = '<div class="phone"><span>سيُضاف رقم التواصل هنا قريباً.</span></div>'; return;
+    }
+    box.innerHTML = STORE.phones.map(function (ph, i) {
+      var digits = ph.replace(/\D/g, '');
+      return '<div class="phone"><bdi>' + ph + '</bdi><span class="grow"></span>' +
+        '<button class="mini" type="button" data-copy="' + i + '">نسخ الرقم</button>' +
+        '<a class="mini" target="_blank" rel="noopener" href="https://wa.me/' + digits + '">واتساب</a></div>';
+    }).join('');
+  }
+
+  /* ====== الأحداث ====== */
+  $('chips').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-cat]'); if (!b) return;
+    activeCat = b.getAttribute('data-cat'); renderChips(); renderGrid();
+  });
+  $('search').addEventListener('input', function () { query = this.value; renderGrid(); });
+  $('grid').addEventListener('click', function (e) {
+    var f = e.target.closest('[data-fav]');
+    if (f) {
+      var fid = +f.getAttribute('data-fav');
+      if (favs[fid]) delete favs[fid]; else { favs[fid] = 1; toast('أضيف إلى المفضلة'); }
+      saveFavs(); renderGrid(); return;
+    }
+    var b = e.target.closest('[data-add]'); if (!b) return;
+    var id = +b.getAttribute('data-add'); cart[id] = (cart[id] || 0) + 1;
+    renderCart(); toast('تمت الإضافة إلى السلة');
+  });
+  $('cartList').addEventListener('click', function (e) {
+    var inc = e.target.closest('[data-inc]'), dec = e.target.closest('[data-dec]');
+    if (inc) { var a = +inc.getAttribute('data-inc'); cart[a] = (cart[a] || 0) + 1; renderCart(); }
+    if (dec) { var d = +dec.getAttribute('data-dec'); cart[d] = (cart[d] || 0) - 1; if (cart[d] <= 0) delete cart[d]; renderCart(); }
+  });
+  $('phones').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-copy]'); if (!b) return;
+    var num = STORE.phones[+b.getAttribute('data-copy')];
+    try {
+      navigator.clipboard.writeText(num).then(function () { toast('تم نسخ الرقم'); }, function () { toast('اضغطي مطولاً على الرقم لنسخه'); });
+    } catch (err) { toast('اضغطي مطولاً على الرقم لنسخه'); }
+  });
+  $('orderLink').addEventListener('click', function (e) { if (this.getAttribute('aria-disabled') === 'true') e.preventDefault(); });
+  $('custName').addEventListener('input', buildOrderLink);
+  $('custCity').addEventListener('input', buildOrderLink);
+  $('openCart').addEventListener('click', openCart);
+  $('barBtn').addEventListener('click', openCart);
+  $('closeCart').addEventListener('click', closeCart);
+  $('scrim').addEventListener('click', closeCart);
+  window.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !$('sheetWrap').hidden) closeCart(); });
+
+  $('demoNote').hidden = !STORE.showDemoNote;
+  document.documentElement.setAttribute('lang', 'ar');
+  document.documentElement.setAttribute('dir', 'rtl');
+  renderTicker(); renderTiles(); renderChips(); renderGrid(); renderAbout(); renderPhones(); renderCart();
+})();
+</script>
+
+</body>
+</html>
